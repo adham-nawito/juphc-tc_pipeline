@@ -47,12 +47,12 @@ spec:
     - name: build
       workspaces:
         - name: source
-          workspace: pipeline-workspace          
+          workspace: pipeline-workspace
       taskRef:
         name: buildah
         kind: ClusterTask
       params:
-        image: IMAGE
-        value: "us.icr.io/$(context.pipelineRun.namespace)/$(params.app-name)"
+        - name: IMAGE  # Corrected format
+          value: "us.icr.io/$(context.pipelineRun.namespace)/$(params.build-image)" 
       runAfter:
-        - tests
+        - npminstall # Note: You had 'tests' here, but 'tests' isn't defined in this YAML
