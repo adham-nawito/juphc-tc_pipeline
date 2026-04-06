@@ -34,3 +34,25 @@ spec:
         value: $(params.branch)
       runAfter:
         - init
+    
+    - name: npminstall
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace          
+      taskRef:
+        name: npm
+      runAfter:
+        - clone
+
+    - name: build
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace          
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+        image: IMAGE
+        value: "us.icr.io/$(context.pipelineRun.namespace)/$(params.app-name)"
+      runAfter:
+        - tests
